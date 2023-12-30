@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\DTO\Autor\StoreUpdateRepositoryServiceDto;
 use App\Models\Autor;
 use App\Repositories\Interfaces\AutorRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class AutorRepository implements AutorRepositoryInterface
 {
@@ -14,17 +15,17 @@ class AutorRepository implements AutorRepositoryInterface
     ) {
     }
 
-    public function listaTodosAutores()
+    public function listaTodosAutores(): Collection
     {
         return $this->autor->all();
     }
 
-    public function getAutor(int $codAu)
+    public function getAutor(int $codAu): Autor
     {
         return $this->autor->find($codAu);
     }
 
-    public function update(int $codAu, string $nome)
+    public function update(int $codAu, string $nome): StoreUpdateRepositoryServiceDto
     {
         $autor = $this->autor->findOrFail($codAu);
         $autor->nome = $nome;
@@ -34,7 +35,7 @@ class AutorRepository implements AutorRepositoryInterface
         return $updateDto;
     }
 
-    public function store(string $nome)
+    public function store(string $nome): StoreUpdateRepositoryServiceDto
     {
 
         $this->autor->nome = $nome;
@@ -44,7 +45,7 @@ class AutorRepository implements AutorRepositoryInterface
         return $storeDto;
     }
 
-    public function delete(int $codAu)
+    public function delete(int $codAu): bool
     {
         $autor = $this->autor->findOrFail($codAu);
         return $autor->delete();

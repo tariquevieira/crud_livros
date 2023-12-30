@@ -25,13 +25,14 @@ class Livro extends Model
         'anoPublicacao',
     ];
 
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
+
     public function autores()
     {
         return $this->belongsToMany(Autor::class, 'livro_autor', 'livro_codl', 'autor_codAu');
+    }
+
+    public function assuntos()
+    {
+        return $this->belongsToMany(Assunto::class, 'livro_assunto', 'livro_codl', 'assunto_codAs');
     }
 }

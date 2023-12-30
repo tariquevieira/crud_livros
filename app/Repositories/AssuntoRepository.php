@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\DTO\Assunto\StoreUpdateRepositoryServiceDto;
 use App\Models\Assunto;
 use App\Repositories\Interfaces\AssuntoRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class AssuntoRepository implements AssuntoRepositoryInterface
 {
@@ -14,7 +15,7 @@ class AssuntoRepository implements AssuntoRepositoryInterface
     ) {
     }
 
-    public function listaTodosassuntos()
+    public function listaTodosassuntos(): Collection
     {
         return $this->assunto->all();
     }
