@@ -2,14 +2,6 @@
 @section('title', 'Novo Livro')
 @section('content')
 
-    @if (!empty($status) && !empty($mensagem))
-        <div class="alert @if ($status) {{ 'success' }} @else {{ 'error' }} @endif">
-            {{ $mensagem }}</div>
-    @endif
-    @if ($errors->any())
-        <h4>{{ $errors->first() }}</h4>
-    @endif
-
     <h1>Novo livro</h1>
     <form action="{{ route('livro.store') }}" method="post">
         @csrf

@@ -1,9 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Lista de livros')
 @section('content')
-    @if ($errors->any())
-        <h4>{{ $errors->first() }}</h4>
-    @endif
+   
     <div class="d-flex flex-row p-2 justify-content-between">
         <h1>Lista de livros</h1>
         <a href="{{ route('livro.create') }}" class="btn btn-success mt-2 mb-2" hole="button">Novo</a>
@@ -18,11 +16,9 @@
                     <form action="{{ route('livro.destroy', $livro->codl) }}" method="post">
                         @csrf
                         @method('DELETE')
-                        <input type="submit" value="Excluir" class="btn btn-danger">
+                        <input type="submit" value="Excluir" class="btn btn-danger" onclick="return confirm('Deseja Apagar esse autor?')">
                     </form>
-
                 </div>
-
             </li>
         @empty
             <p>Não existe livro</p>

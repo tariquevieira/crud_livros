@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateAssuntoRequest;
 use App\Services\AssuntoService;
 use Illuminate\Http\Request;
 
@@ -36,7 +37,7 @@ class AssuntoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUpdateAssuntoRequest $request)
     {
         $dados = $request->all();
         $createDto = $this->assuntoService->store($dados['descricao']);
@@ -70,7 +71,7 @@ class AssuntoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $assunto)
+    public function update(StoreUpdateAssuntoRequest $request, string $assunto)
     {
         $dados = $request->all();
         $updateDto = $this->assuntoService->update((int)$assunto, $dados['descricao']);

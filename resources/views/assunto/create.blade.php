@@ -1,10 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Novo Assunto')
 @section('content')
-    @if (!empty($status) && !empty($mensagem))
-        <div class="alert @if ($status) {{ 'success' }} @else {{ 'error' }} @endif">
-            {{ $mensagem }}</div>
-    @endif
+   
     <div class="mt-2 p-4">
         <h1>Novo Assunto</h1>
     </div>

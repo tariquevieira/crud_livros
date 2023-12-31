@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateAutorRequest;
 use Illuminate\Http\Request;
 use App\Services\AutorService;
 use Illuminate\View\View;
@@ -36,7 +37,7 @@ class AutorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUpdateAutorRequest $request)
     {
         $dados = $request->all();
         $createDto = $this->autorService->store($dados['nome']);
@@ -70,7 +71,7 @@ class AutorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $autor)
+    public function update(StoreUpdateAutorRequest $request, string $autor)
     {
         $dados = $request->all();
         $updateDto = $this->autorService->update((int)$autor, $dados['nome']);

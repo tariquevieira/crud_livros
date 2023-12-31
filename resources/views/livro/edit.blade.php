@@ -2,14 +2,6 @@
 @section('title', 'Editar Livro')
 @section('content')
 
-    @if (!empty($status) && !empty($mensagem))
-        <div class="alert @if ($status) {{ 'success' }} @else {{ 'error' }} @endif">
-            {{ $mensagem }}</div>
-    @endif
-    @if ($errors->any())
-        <h4>{{ $errors->first() }}</h4>
-    @endif
-
     <h1>Editar livro</h1>
     <form action="{{ route('livro.update', $livro->codl) }}" method="post">
         @csrf

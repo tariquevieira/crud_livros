@@ -1,11 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Editar Assunto')
 @section('content')
-    @if (!empty($status) && !empty($message))
-        <div class="alert @if ($status) {{ 'success' }} @else {{ 'error' }} @endif">
-            {{ $mensagem }}</div>
-    @endif
-
+   
     <div class="mt-2 p-4">
         <h1>Editar Assunto</h1>
     </div>
@@ -15,17 +11,18 @@
 
         <div class="row g-3 align-items-center">
             <div class="col-auto">
-                <label for="codAs"  class="col-form-label">Código Assunto:</label>
+                <label for="codAs" class="col-form-label">Código Assunto:</label>
             </div>
             <div class="col-auto">
                 <input type="number" class="form-control" value="{{ $assunto->codAs }}" disabled>
             </div>
             <div class="col-auto">
-                <label for="descricao"  class="col-form-label">Descricao:</label>
+                <label for="descricao" class="col-form-label">Descricao:</label>
             </div>
 
             <div class="col-auto">
-                <input type="text" name="descricao" class="form-control" id="descricao" value="{{ $assunto->descricao }}">
+                <input type="text" name="descricao" class="form-control" id="descricao"
+                    value="{{ $assunto->descricao }}">
             </div>
             <div class="col-auto">
                 <input type="submit" value="Enviar" class="btn btn-secondary">

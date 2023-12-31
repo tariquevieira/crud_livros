@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Livro\StoreControllerServiceDto;
+use App\Http\Requests\StoreUpdateLivroRequest;
 use App\Services\LivroService;
 use Illuminate\Http\Request;
 
@@ -44,7 +45,7 @@ class LivroController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUpdateLivroRequest $request)
     {
         $dto = new StoreControllerServiceDto(
             $request->titulo,
@@ -109,7 +110,7 @@ class LivroController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $codl)
+    public function update(StoreUpdateLivroRequest $request, int $codl)
     {
         $dto = new StoreControllerServiceDto(
             $request->titulo,

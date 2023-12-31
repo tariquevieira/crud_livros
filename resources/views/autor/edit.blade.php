@@ -1,10 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Editar Autor')
 @section('content')
-    @if (!empty($status) && !empty($message))
-        <div class="alert @if ($status) {{ 'success' }} @else {{ 'error' }} @endif">
-            {{ $mensagem }}</div>
-    @endif
+   
     <h1>Editar Autor</h1>
     <form action="{{ route('autor.update', $autor->codAu) }}" method="post">
         @csrf

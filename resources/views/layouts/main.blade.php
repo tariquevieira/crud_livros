@@ -37,6 +37,18 @@
     <div class="container main">
         <div class="row">
             <div class="col-16 p-4">
+                @if (!empty($status) && !empty($mensagem))
+                <div class="alert alert-@if ($status) {{ 'success' }} @else {{ 'error' }} @endif"
+                    hole="alert">
+                    {{ $mensagem }}</div>
+            @endif
+        
+            @if ($errors->any())
+                <div class="alert alert-danger" hole="alert">
+                    <p>{{ $errors->first() }}</p>
+                </div>
+            @endif
+            
                 @yield('content')
             </div>
         </div>
