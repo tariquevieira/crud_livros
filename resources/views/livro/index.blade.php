@@ -1,39 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-
-<body>
-    <div class="center">
-        <div class="w100">
-            @if ($errors->any())
-                <h4>{{ $errors->first() }}</h4>
-            @endif
-            <h1>Lista de livros</h1>
-            <a href="{{route('livro.create')}}">Novo</a>
-            <ul>
-                @forelse ($livros as $livro)
-                    <li>
-                        {{ $livro->titulo }}
-                        <a href="{{ route('livro.edit', $livro->codl)}}">Editar</a>
-                        <form action="{{route('livro.destroy', $livro->codl)}}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <input type="submit" value="Excluir">
-                        </form>
-                    </li>
-                @empty
-                    <p>Não existe livro</p>
-                @endforelse
-            </ul>
-        </div>
+@extends('layouts.main')
+@section('title', 'Lista de livros')
+@section('content')
+    @if ($errors->any())
+        <h4>{{ $errors->first() }}</h4>
+    @endif
+    <div class="d-flex flex-row p-2 justify-content-between">
+        <h1>Lista de livros</h1>
+        <a href="{{ route('livro.create') }}" class="btn btn-success mt-2 mb-2" hole="button">Novo</a>
     </div>
 
-</body>
+    <ul class="list-group">
+        @forelse ($livros as $livro)
+            <li class="list-group-item d-flex flex-row justify-content-between">
+                <span class="m-2">{{ $livro->titulo }}</span>
+                <div class="d-flex flex-row">
+                    <a href="{{ route('livro.edit', $livro->codl) }}" class="btn btn-secondary me-2" hole="button">Editar</a>
+                    <form action="{{ route('livro.destroy', $livro->codl) }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" value="Excluir" class="btn btn-danger">
+                    </form>
 
-</html>
+                </div>
+
+            </li>
+        @empty
+            <p>Não existe livro</p>
+        @endforelse
+    </ul>
+@endsection

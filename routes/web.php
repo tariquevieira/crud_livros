@@ -23,3 +23,7 @@ Route::get('/', function () {
 Route::resource('autor', AutorController::class);
 Route::resource('assunto', AssuntoController::class);
 Route::resource('livro', LivroController::class);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

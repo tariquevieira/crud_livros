@@ -1,0 +1,20 @@
+/* Variaveis*/
+:root {
+    --main-color-body: #EFEFEF;
+    --main-color-white: #FFFFFF;
+    --main-border-radius: 5px;
+}
+
+/**/
+
+body {
+    background-color: var(--main-color-body);
+}
+
+div.container {
+    background-color: var(--main-color-white);
+    border: 2px solid var(--main-color-white);
+    border-radius: var(--main-border-radius);
+    padding: 20px 10px;
+    margin-top: 30px;
+}
