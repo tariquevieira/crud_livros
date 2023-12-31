@@ -3,64 +3,64 @@
 @section('content')
     <h1>Livro: {{ $livro->titulo }}</h1>
     <form>
-        <div class="column-row">
-            <label for="titulo">Titulo:</label>
-            <input type="text" name="titulo" id="titulo" value="{{ $livro->titulo }}" disabled>
-
-            <label for="editora">Editora:</label>
-            <input type="text" name="editora" id="editora" value="{{ $livro->editora }}" disabled>
-
-            <label for="edicao">Edição:</label>
-            <input type="number" name="edicao" id="edicao" value="{{ $livro->edicao }}" disabled>
-
-            <label for="editora">Ano de Publicação:</label>
-            <input type="text" name="anoPub" id="anoPub" value="{{ $livro->anoPublicacao }}" disabled>
+        <div class="form-group">
+            @include('livro.includes.dadosform')
+        </div>
+        <div class="row">
+            <h3 class="mb-4">Autores</h3>
+            <div class="scroll-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Nome</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($livro->autores as $autor)
+                            <tr>
+                                <td>
+                                    {{ $autor->codAu }}
+                                </td>
+                                <td>
+                                    {{ $autor->nome }}
+                                </td>
+                            </tr>
+                        @empty
+                            <p>Nenhum autor encontrado</p>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Codigo</th>
-                        <th>Nome</th>
-                    </tr>
-                </thead>
-                @forelse ($livro->autores as $autor)
-                    <tr>
-                        <td>
-                            {{ $autor->codAu }}
-                        </td>
-                        <td>
-                            {{ $autor->nome }}
-                        </td>
-                    </tr>
-                @empty
-                    <p>Nenhum autor encontrado</p>
-                @endforelse
-            </table>
-        </div>
+        <div class="row">
+            <h3 class="mb-4">Assunto</h3>
+            <div class="scroll-container">
 
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Codigo</th>
-                        <th>Nome</th>
-                    </tr>
-                </thead>
-                @forelse ($livro->assuntos as $assunto)
-                    <tr>
-                        <td>
-                            {{ $assunto->codAs }}
-                        </td>
-                        <td>
-                            {{ $assunto->descricao }}
-                        </td>
-                    </tr>
-                @empty
-                    <p>Nenhum assunto encontrado</p>
-                @endforelse
-            </table>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($livro->assuntos as $assunto)
+                            <tr>
+                                <td>
+                                    {{ $assunto->codAs }}
+                                </td>
+                                <td>
+                                    {{ $assunto->descricao }}
+                                </td>
+                            </tr>
+                        @empty
+                            <p>Nenhum assunto encontrado</p>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </form>
 @endsection

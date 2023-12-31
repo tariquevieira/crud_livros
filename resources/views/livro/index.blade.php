@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Lista de livros')
 @section('content')
-   
+
     <div class="d-flex flex-row p-2 justify-content-between">
         <h1>Lista de livros</h1>
         <a href="{{ route('livro.create') }}" class="btn btn-success mt-2 mb-2" hole="button">Novo</a>
@@ -12,6 +12,8 @@
             <li class="list-group-item d-flex flex-row justify-content-between">
                 <span class="m-2">{{ $livro->titulo }}</span>
                 <div class="d-flex flex-row">
+
+                    <a href="{{ route('livro.show', $livro->codl) }}" class="btn btn-secondary me-2" hole="button">Ver</a>
                     <a href="{{ route('livro.edit', $livro->codl) }}" class="btn btn-secondary me-2" hole="button">Editar</a>
                     <form action="{{ route('livro.destroy', $livro->codl) }}" method="post">
                         @csrf
