@@ -24,46 +24,60 @@ class AutorService
         return $autor;
     }
 
-    public function update(int $codAu, string $nome)
+    public function update(int $codAu, string $nome): StoreUpdateServiceControllerDto
     {
-        $updateDto = $this->autorRepository->update($codAu, $nome);
+        $dto = $this->autorRepository->update($codAu, $nome);
 
-        if ($updateDto->status) {
+        if ($dto->status) {
             return new StoreUpdateServiceControllerDto(
-                $updateDto->status,
+                $dto->status,
                 "Autor atualizado com sucesso!!!",
-                $updateDto->autor
+                $dto->autor
             );
         }
 
         return new StoreUpdateServiceControllerDto(
-            $updateDto->status,
-            "Erro ao atualizar autor!",
+            $dto->status,
+            $dto->mensagem,
             $this->getAutor($codAu)
         );
     }
 
-    public function store(string $nome)
+    public function store(string $nome): StoreUpdateServiceControllerDto
     {
-        $storeDto = $this->autorRepository->store($nome);
+        $dto = $this->autorRepository->store($nome);
 
-        if ($storeDto->status) {
+        if ($dto->status) {
             return new StoreUpdateServiceControllerDto(
-                $storeDto->status,
+                $dto->status,
                 "Autor criado com sucesso!!!",
-                $storeDto->autor
+                $dto->autor
             );
         }
 
         return new StoreUpdateServiceControllerDto(
-            $storeDto->status,
-            "Erro ao atualizar autor!",
-            $storeDto->autor
+            $dto->status,
+            $dto->mensagem,
+            $dto->autor
         );
     }
 
-    public function delete(int $codAu)
+    public function delete(int $codAu): StoreUpdateServiceControllerDto
     {
-        return $this->autorRepository->delete($codAu);
+        $dto = $this->autorRepository->delete($codAu);
+
+        if ($dto->status) {
+            return new StoreUpdateServiceControllerDto(
+                $dto->status,
+                "Autor criado com sucesso!!!",
+                $dto->autor
+            );
+        }
+
+        return new StoreUpdateServiceControllerDto(
+            $dto->status,
+            $dto->mensagem,
+            null
+        );
     }
 }

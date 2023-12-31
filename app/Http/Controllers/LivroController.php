@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Livro\StoreControllerServiceDto;
+use App\DTO\Livro\StoreUpdateFindDto;
 use App\Http\Requests\StoreUpdateLivroRequest;
 use App\Services\LivroService;
 use Illuminate\Http\Request;
@@ -58,11 +59,7 @@ class LivroController extends Controller
 
         $result = $this->livroService->store($dto);
 
-        if ($result->status) {
-            return redirect()->route('livro.index');
-        }
-
-        return redirect()->back()->withErrors(['erro_store' => $result->mensagem]);
+        return $this->lidaRedirect($result);
     }
 
     /**
@@ -122,11 +119,7 @@ class LivroController extends Controller
             (int) $codl
         );
         $result = $this->livroService->update($dto);
-        if ($result->status) {
-            return redirect()->route('livro.index');
-        }
-
-        return redirect()->back()->withErrors(['erro_store' => $result->mensagem]);
+        return $this->lidaRedirect($result);
     }
 
     /**
@@ -135,8 +128,16 @@ class LivroController extends Controller
     public function destroy(int $codl)
     {
         $result = $this->livroService->delete($codl);
+        return $this->lidaRedirect($result);
+    }
+
+    private function lidaRedirect(StoreUpdateFindDto $result)
+    {
+
         if ($result->status) {
-            return redirect()->route('livro.index');
+            return redirect()->route('livro.index')->with('success', $result->mensagem);
         }
+
+        return redirect()->back()->withErrors(['error' => $result->mensagem]);
     }
 }

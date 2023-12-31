@@ -11,7 +11,7 @@
                     <label class="col-form-label" for="titulo">Titulo:</label>
                 </div>
                 <div class="col-11">
-                    <input class="form-control" type="text" name="titulo" id="titulo" value="">
+                    <input class="form-control" type="text" name="titulo" id="titulo" value="{{ old('titulo') }}">
                 </div>
             </div>
 
@@ -20,7 +20,7 @@
                     <label class="col-form-label" for="editora">Editora:</label>
                 </div>
                 <div class="col-11">
-                    <input class="form-control" type="text" name="editora" id="editora" value="">
+                    <input class="form-control" type="text" name="editora" id="editora" value="{{ old('editora') }}">
                 </div>
             </div>
 
@@ -29,7 +29,7 @@
                     <label class="col-form-label" for="edicao">Edição:</label>
                 </div>
                 <div class="col-11">
-                    <input class="form-control" type="number" name="edicao" id="edicao" value="">
+                    <input class="form-control" type="number" name="edicao" id="edicao" value="{{ old('edicao') }}">
                 </div>
             </div>
 
@@ -38,7 +38,7 @@
                     <label class="col-form-label" for="editora">Ano de Publicação:</label>
                 </div>
                 <div class="col-11">
-                    <input class="form-control" type="text" name="anoPub" id="anoPub" value="">
+                    <input class="form-control" type="text" name="anoPub" id="anoPub" value="{{ old('anoPub') }}">
                 </div>
             </div>
 

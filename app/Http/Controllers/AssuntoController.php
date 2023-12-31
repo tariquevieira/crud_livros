@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Assunto\StoreUpdateServiceControllerDto;
 use App\Http\Requests\StoreUpdateAssuntoRequest;
 use App\Services\AssuntoService;
 use Illuminate\Http\Request;
@@ -40,21 +41,17 @@ class AssuntoController extends Controller
     public function store(StoreUpdateAssuntoRequest $request)
     {
         $dados = $request->all();
-        $createDto = $this->assuntoService->store($dados['descricao']);
+        $result = $this->assuntoService->store($dados['descricao']);
 
-        return view('assunto.edit', [
-            'assunto' => $createDto->assunto,
-            'updated' => $createDto->status,
-            'mensagem' => $createDto->mensagem
-        ]);
+        return $this->lidaRedirect($result);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $codAu)
     {
-        //
+        return redirect()->route('assunto.edit', $codAu);
     }
 
     /**
@@ -74,13 +71,8 @@ class AssuntoController extends Controller
     public function update(StoreUpdateAssuntoRequest $request, string $assunto)
     {
         $dados = $request->all();
-        $updateDto = $this->assuntoService->update((int)$assunto, $dados['descricao']);
-
-        return view('assunto.edit', [
-            'assunto' => $updateDto->assunto,
-            'updated' => $updateDto->status,
-            'message' => $updateDto->mensagem
-        ]);
+        $result = $this->assuntoService->update((int)$assunto, $dados['descricao']);
+        return $this->lidaRedirect($result);
     }
 
     /**
@@ -88,10 +80,16 @@ class AssuntoController extends Controller
      */
     public function destroy(string $assunto)
     {
-        $deleted = $this->assuntoService->delete((int)$assunto);
+        $result = $this->assuntoService->delete((int)$assunto);
+        return $this->lidaRedirect($result);
+    }
 
-        if ($deleted) {
-            return $this->index();
+    private function lidaRedirect(StoreUpdateServiceControllerDto $result)
+    {
+        if ($result->status) {
+            return redirect()->route('assunto.index')->with('success', $result->mensagem);
         }
+
+        return redirect()->back()->withErrors(['error' => $result->mensagem]);
     }
 }

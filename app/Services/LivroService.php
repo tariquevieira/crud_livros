@@ -11,7 +11,6 @@ use App\Repositories\AutorRepository;
 use App\Repositories\LivroRepository;
 use App\Services\Actions\AdaptadorAssuntosCheckedAction;
 use App\Services\Actions\AdaptadorAutoresCheckedAction;
-use App\Services\Actions\LivroStoreAction;
 use Illuminate\Database\Eloquent\Collection;
 
 class LivroService
@@ -20,7 +19,6 @@ class LivroService
         private LivroRepository $livroRepository,
         private AutorRepository $autorRepository,
         private AssuntoRepository $assuntoRepository,
-        private LivroStoreAction $livroStoreAction,
         private AdaptadorAutoresCheckedAction $adaptadorAutores,
         private AdaptadorAssuntosCheckedAction $adaptadorAssuntos
     ) {
@@ -51,7 +49,7 @@ class LivroService
 
     public function store(StoreControllerServiceDto $dto): StoreUpdateFindDto
     {
-        $result = $this->livroStoreAction->execute($dto);
+        $result = $this->livroRepository->store($dto);
 
         if ($result->status) {
             return new StoreUpdateFindDto(
@@ -136,6 +134,10 @@ class LivroService
             );
         }
 
-        return $this->livroRepository->delete($result->livro);
+        return new StoreUpdateFindDto(
+            status: true,
+            mensagem: "Livro deletado com sucesso!",
+            livro: null,
+        );;
     }
 }

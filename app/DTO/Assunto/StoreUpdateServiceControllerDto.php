@@ -10,6 +10,7 @@ class StoreUpdateServiceControllerDto
     public readonly ?assunto $assunto;
     public readonly string $mensagem;
 
+
     public function __construct(
         bool $status = false,
         string $mensagem = '',

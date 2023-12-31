@@ -3,9 +3,11 @@
 namespace App\Repositories;
 
 use App\DTO\Autor\StoreUpdateRepositoryServiceDto;
+use App\Exceptions\Handler\QueryExceptionHandler;
 use App\Models\Autor;
 use App\Repositories\Interfaces\AutorRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\QueryException;
 
 class AutorRepository implements AutorRepositoryInterface
 {
@@ -27,27 +29,60 @@ class AutorRepository implements AutorRepositoryInterface
 
     public function update(int $codAu, string $nome): StoreUpdateRepositoryServiceDto
     {
-        $autor = $this->autor->findOrFail($codAu);
-        $autor->nome = $nome;
+        try {
+            $autor = $this->autor->findOrFail($codAu);
+            $autor->nome = $nome;
 
-        $updateDto = new StoreUpdateRepositoryServiceDto($autor->save(), $autor);
+            $dto = new StoreUpdateRepositoryServiceDto($autor->save(), $autor);
 
-        return $updateDto;
+            return $dto;
+        } catch (QueryException $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        } catch (\Exception $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        }
     }
 
     public function store(string $nome): StoreUpdateRepositoryServiceDto
     {
+        try {
+            $this->autor->nome = $nome;
 
-        $this->autor->nome = $nome;
+            $dto = new StoreUpdateRepositoryServiceDto($this->autor->save(), $this->autor);
 
-        $storeDto = new StoreUpdateRepositoryServiceDto($this->autor->save(), $this->autor);
+            if (!$dto->status) {
+                throw new \Exception("Erro desconhecido");
+            }
 
-        return $storeDto;
+            return $dto;
+        } catch (QueryException $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        } catch (\Exception $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        }
     }
 
-    public function delete(int $codAu): bool
+    public function delete(int $codAu): StoreUpdateRepositoryServiceDto
     {
-        $autor = $this->autor->findOrFail($codAu);
-        return $autor->delete();
+        try {
+            $autor = $this->autor->findOrFail($codAu);
+            $dto = new StoreUpdateRepositoryServiceDto($autor->delete());
+
+            if (!$dto->status) {
+                throw new \Exception("Erro desconhecido");
+            }
+
+            return $dto;
+        } catch (QueryException $e) {
+            $message = $e->getMessage();
+            if ($e->getCode() === QueryExceptionHandler::INTEGRITY_CONSTRAINT_VIOLATION) {
+                $hanlder = new QueryExceptionHandler($e->getCode(), "Autor", "Livro");
+                $message = $hanlder->getMessage();
+            }
+
+            return new StoreUpdateRepositoryServiceDto(false, null, $message);
+        } catch (\Exception $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        }
     }
 }

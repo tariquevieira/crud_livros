@@ -18,5 +18,6 @@
             <div class="col-auto">
                 <input type="submit" value="Enviar" class="btn btn-secondary">
             </div>
+        </div>
     </form>
 @endsection

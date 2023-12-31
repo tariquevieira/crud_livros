@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Autor\StoreUpdateServiceControllerDto;
 use App\Http\Requests\StoreUpdateAutorRequest;
-use Illuminate\Http\Request;
 use App\Services\AutorService;
-use Illuminate\View\View;
 
 class AutorController extends Controller
 {
@@ -40,13 +39,8 @@ class AutorController extends Controller
     public function store(StoreUpdateAutorRequest $request)
     {
         $dados = $request->all();
-        $createDto = $this->autorService->store($dados['nome']);
-
-        return view('autor.edit', [
-            'autor' => $createDto->autor,
-            'updated' => $createDto->status,
-            'mensagem' => $createDto->mensagem
-        ]);
+        $result = $this->autorService->store($dados['nome']);
+        return $this->lidaRedirect($result);
     }
 
     /**
@@ -74,13 +68,8 @@ class AutorController extends Controller
     public function update(StoreUpdateAutorRequest $request, string $autor)
     {
         $dados = $request->all();
-        $updateDto = $this->autorService->update((int)$autor, $dados['nome']);
-
-        return view('autor.edit', [
-            'autor' => $updateDto->autor,
-            'updated' => $updateDto->status,
-            'message' => $updateDto->mensagem
-        ]);
+        $result = $this->autorService->update((int)$autor, $dados['nome']);
+        return $this->lidaRedirect($result);
     }
 
     /**
@@ -88,10 +77,18 @@ class AutorController extends Controller
      */
     public function destroy(string $autor)
     {
-        $deleted = $this->autorService->delete((int)$autor);
+        $result = $this->autorService->delete((int)$autor);
 
-        if ($deleted) {
-            return $this->index();
+        return $this->lidaRedirect($result);
+    }
+
+    private function lidaRedirect(StoreUpdateServiceControllerDto $result)
+    {
+
+        if ($result->status) {
+            return redirect()->route('autor.index')->with('success', $result->mensagem);
         }
+
+        return redirect()->back()->withErrors(['error' => $result->mensagem]);
     }
 }

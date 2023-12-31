@@ -26,44 +26,53 @@ class AssuntoService
 
     public function update(int $codAu, string $nome)
     {
-        $updateDto = $this->assuntoRepository->update($codAu, $nome);
+        $dto = $this->assuntoRepository->update($codAu, $nome);
 
-        if ($updateDto->status) {
+        if ($dto->status) {
             return new StoreUpdateServiceControllerDto(
-                $updateDto->status,
+                $dto->status,
                 "assunto atualizado com sucesso!!!",
-                $updateDto->assunto
+                $dto->assunto
             );
         }
 
         return new StoreUpdateServiceControllerDto(
-            $updateDto->status,
-            "Erro ao atualizar assunto!",
+            $dto->status,
+            $dto->mensagem,
             $this->getassunto($codAu)
         );
     }
 
-    public function store(string $nome)
+    public function store(string $nome): StoreUpdateServiceControllerDto
     {
-        $storeDto = $this->assuntoRepository->store($nome);
+        $dto = $this->assuntoRepository->store($nome);
 
-        if ($storeDto->status) {
+        if ($dto->status) {
             return new StoreUpdateServiceControllerDto(
-                $storeDto->status,
+                $dto->status,
                 "assunto criado com sucesso!!!",
-                $storeDto->assunto
+                $dto->assunto
             );
         }
 
         return new StoreUpdateServiceControllerDto(
-            $storeDto->status,
-            "Erro ao atualizar assunto!",
-            $storeDto->assunto
+            $dto->status,
+            $dto->mensagem,
+            $dto->assunto
         );
     }
 
     public function delete(int $codAu)
     {
-        return $this->assuntoRepository->delete($codAu);
+        $dto = $this->assuntoRepository->delete($codAu);
+
+        if ($dto->status) {
+            return new StoreUpdateServiceControllerDto(true, "Assunto deletado");
+        }
+
+        return new StoreUpdateServiceControllerDto(
+            false,
+            $dto->mensagem
+        );
     }
 }
