@@ -3,27 +3,47 @@
 namespace App\Services;
 
 use App\DTO\Autor\StoreUpdateServiceControllerDto;
-use App\Repositories\AutorRepository;
+use App\Models\Autor;
+use App\Repositories\Interfaces\AutorRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class AutorService
 {
     public function __construct(
-        private AutorRepository $autorRepository
+        private AutorRepositoryInterface $autorRepository
     ) {
     }
 
-    public function listaTodosAutores()
+    /**
+     * Lida com retorno de todos autores
+     *
+     * @return Collection
+     */
+    public function listaTodosAutores(): Collection
     {
         $autores = $this->autorRepository->listaTodosAutores();
         return $autores;
     }
 
-    public function getAutor(int $codAu)
+    /**
+     * Lida com retorno de um autor
+     *
+     * @param integer $codAu
+     * @return Autor
+     */
+    public function getAutor(int $codAu): Autor
     {
         $autor = $this->autorRepository->getAutor($codAu);
         return $autor;
     }
 
+    /**
+     * Lida com a atualização autor
+     *
+     * @param integer $codAu
+     * @param string $nome
+     * @return StoreUpdateServiceControllerDto
+     */
     public function update(int $codAu, string $nome): StoreUpdateServiceControllerDto
     {
         $dto = $this->autorRepository->update($codAu, $nome);
@@ -43,6 +63,12 @@ class AutorService
         );
     }
 
+    /**
+     * Lida com a inserção autor
+     *
+     * @param string $nome
+     * @return StoreUpdateServiceControllerDto
+     */
     public function store(string $nome): StoreUpdateServiceControllerDto
     {
         $dto = $this->autorRepository->store($nome);
@@ -62,6 +88,12 @@ class AutorService
         );
     }
 
+    /**
+     *  Lida com deleção de Autor
+     *
+     * @param integer $codAu
+     * @return StoreUpdateServiceControllerDto
+     */
     public function delete(int $codAu): StoreUpdateServiceControllerDto
     {
         $dto = $this->autorRepository->delete($codAu);

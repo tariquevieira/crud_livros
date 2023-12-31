@@ -3,28 +3,49 @@
 namespace App\Services;
 
 use App\DTO\Assunto\StoreUpdateServiceControllerDto;
+use App\Models\Assunto;
 use App\Repositories\AssuntoRepository;
+use App\Repositories\Interfaces\AssuntoRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class AssuntoService
 {
     public function __construct(
-        private AssuntoRepository $assuntoRepository
+        private AssuntoRepositoryInterface $assuntoRepository
     ) {
     }
 
-    public function listaTodosassuntos()
+    /**
+     * Lida com retorno de todos os assuntos
+     *
+     * @return Collection
+     */
+    public function listaTodosassuntos(): Collection
     {
         $assuntoes = $this->assuntoRepository->listaTodosassuntos();
         return $assuntoes;
     }
 
-    public function getassunto(int $codAu)
+    /**
+     * Lida com o retorno de um assunto
+     *
+     * @param integer $codAu
+     * @return Assunto
+     */
+    public function getassunto(int $codAu): Assunto
     {
         $assunto = $this->assuntoRepository->getassunto($codAu);
         return $assunto;
     }
 
-    public function update(int $codAu, string $nome)
+    /**
+     * Lida com a atualização Assunto
+     *
+     * @param integer $codAu
+     * @param string $nome
+     * @return StoreUpdateServiceControllerDto
+     */
+    public function update(int $codAu, string $nome): StoreUpdateServiceControllerDto
     {
         $dto = $this->assuntoRepository->update($codAu, $nome);
 
@@ -43,6 +64,12 @@ class AssuntoService
         );
     }
 
+    /**
+     * Lida com a inserção Assunto
+     *
+     * @param string $nome
+     * @return StoreUpdateServiceControllerDto
+     */
     public function store(string $nome): StoreUpdateServiceControllerDto
     {
         $dto = $this->assuntoRepository->store($nome);
@@ -62,6 +89,12 @@ class AssuntoService
         );
     }
 
+    /**
+     * Lida com deleção de assunto
+     *
+     * @param integer $codAu
+     * @return void
+     */
     public function delete(int $codAu)
     {
         $dto = $this->assuntoRepository->delete($codAu);

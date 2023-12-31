@@ -17,16 +17,31 @@ class AutorRepository implements AutorRepositoryInterface
     ) {
     }
 
+    /**
+     *
+     * @return Collection
+     */
     public function listaTodosAutores(): Collection
     {
         return $this->autor->all();
     }
 
+    /**
+     *
+     * @param integer $codAu
+     * @return Autor
+     */
     public function getAutor(int $codAu): Autor
     {
         return $this->autor->find($codAu);
     }
 
+    /**
+     *
+     * @param integer $codAu
+     * @param string $nome
+     * @return StoreUpdateRepositoryServiceDto
+     */
     public function update(int $codAu, string $nome): StoreUpdateRepositoryServiceDto
     {
         try {
@@ -43,6 +58,11 @@ class AutorRepository implements AutorRepositoryInterface
         }
     }
 
+    /**
+     *
+     * @param string $nome
+     * @return StoreUpdateRepositoryServiceDto
+     */
     public function store(string $nome): StoreUpdateRepositoryServiceDto
     {
         try {
@@ -62,6 +82,11 @@ class AutorRepository implements AutorRepositoryInterface
         }
     }
 
+    /**
+     *
+     * @param integer $codAu
+     * @return StoreUpdateRepositoryServiceDto
+     */
     public function delete(int $codAu): StoreUpdateRepositoryServiceDto
     {
         try {

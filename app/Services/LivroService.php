@@ -8,6 +8,9 @@ use App\DTO\Livro\StoreControllerServiceDto;
 use App\DTO\Livro\StoreUpdateFindDto;
 use App\Repositories\AssuntoRepository;
 use App\Repositories\AutorRepository;
+use App\Repositories\Interfaces\AssuntoRepositoryInterface;
+use App\Repositories\Interfaces\AutorRepositoryInterface;
+use App\Repositories\Interfaces\LivroRepositoryInterface;
 use App\Repositories\LivroRepository;
 use App\Services\Actions\AdaptadorAssuntosCheckedAction;
 use App\Services\Actions\AdaptadorAutoresCheckedAction;
@@ -16,19 +19,29 @@ use Illuminate\Database\Eloquent\Collection;
 class LivroService
 {
     public function __construct(
-        private LivroRepository $livroRepository,
-        private AutorRepository $autorRepository,
-        private AssuntoRepository $assuntoRepository,
+        private LivroRepositoryInterface $livroRepository,
+        private AutorRepositoryInterface $autorRepository,
+        private AssuntoRepositoryInterface $assuntoRepository,
         private AdaptadorAutoresCheckedAction $adaptadorAutores,
         private AdaptadorAssuntosCheckedAction $adaptadorAssuntos
     ) {
     }
 
+    /**
+     *Lida com retorno de todos livros
+     *
+     * @return Collection
+     */
     public function listatodosLivros(): Collection
     {
         return $this->livroRepository->listatodosLivros();
     }
 
+    /**
+     * Lida com dados para criação de novo livro
+     *
+     * @return CreateServiceControllerDto
+     */
     public function lidaDadosNovoLivro(): CreateServiceControllerDto
     {
         $autores = $this->autorRepository->listaTodosAutores();
@@ -47,6 +60,12 @@ class LivroService
         return $dto;
     }
 
+    /**
+     *  Lida com a inserção de livro
+     *
+     * @param StoreControllerServiceDto $dto
+     * @return StoreUpdateFindDto
+     */
     public function store(StoreControllerServiceDto $dto): StoreUpdateFindDto
     {
         $result = $this->livroRepository->store($dto);
@@ -62,6 +81,12 @@ class LivroService
         return $result;
     }
 
+    /**
+     * Lida com busca de um livro
+     *
+     * @param integer $codl
+     * @return StoreUpdateFindDto
+     */
     public function find(int $codl): StoreUpdateFindDto
     {
         $livro = $this->livroRepository->find($codl);
@@ -80,6 +105,12 @@ class LivroService
         );
     }
 
+    /**
+     * Lida com dados para edição de um livro
+     *
+     * @param integer $codl
+     * @return EditServiceControllerDto
+     */
     public function lidaDadosEdicao(int $codl): EditServiceControllerDto
     {
         $result = $this->find($codl);
@@ -107,6 +138,12 @@ class LivroService
         );
     }
 
+    /**
+     * Lida com atualização de livros
+     *
+     * @param StoreControllerServiceDto $dto
+     * @return StoreUpdateFindDto
+     */
     public function update(StoreControllerServiceDto $dto): StoreUpdateFindDto
     {
         $result = $this->find($dto->codl);
@@ -122,6 +159,12 @@ class LivroService
         return $this->livroRepository->update($result->livro, $dto);
     }
 
+    /**
+     * Lida com a deleção de livros
+     *
+     * @param integer $codl
+     * @return StoreUpdateFindDto
+     */
     public function delete(int $codl): StoreUpdateFindDto
     {
         $result = $this->find($codl);

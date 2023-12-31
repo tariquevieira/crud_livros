@@ -57,9 +57,14 @@ class AssuntoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $assunto)
+    public function edit(string $codAu)
     {
-        $assunto = $this->assuntoService->getassunto((int)$assunto);
+        $assunto = $this->assuntoService->getassunto((int)$codAu);
+
+        if (empty($assunto)) {
+            return redirect()->route('assunto.index')->withErrors(['error' => "Assunto não encontrado"]);
+        }
+
         return view('assunto.edit', [
             'assunto' => $assunto
         ]);

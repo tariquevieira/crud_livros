@@ -17,17 +17,32 @@ class AssuntoRepository implements AssuntoRepositoryInterface
     ) {
     }
 
+    /**
+     *
+     * @return Collection
+     */
     public function listaTodosassuntos(): Collection
     {
         return $this->assunto->all();
     }
 
-    public function getassunto(int $codAs)
+    /**
+     *
+     * @param integer $codAs
+     * @return Assunto
+     */
+    public function getassunto(int $codAs): Assunto
     {
         return $this->assunto->find($codAs);
     }
 
-    public function update(int $codAs, string $descricao)
+    /**
+     *
+     * @param integer $codAs
+     * @param string $descricao
+     * @return StoreUpdateRepositoryServiceDto
+     */
+    public function update(int $codAs, string $descricao): StoreUpdateRepositoryServiceDto
     {
         try {
             $assunto = $this->assunto->findOrFail($codAs);
@@ -47,7 +62,12 @@ class AssuntoRepository implements AssuntoRepositoryInterface
         }
     }
 
-    public function store(string $descricao)
+    /**
+     *
+     * @param string $descricao
+     * @return StoreUpdateRepositoryServiceDto
+     */
+    public function store(string $descricao): StoreUpdateRepositoryServiceDto
     {
         try {
             $this->assunto->descricao = $descricao;
@@ -66,7 +86,12 @@ class AssuntoRepository implements AssuntoRepositoryInterface
         }
     }
 
-    public function delete(int $codAs)
+    /**
+     *
+     * @param integer $codAs
+     * @return StoreUpdateRepositoryServiceDto
+     */
+    public function delete(int $codAs): StoreUpdateRepositoryServiceDto
     {
         try {
             $assunto = $this->assunto->findOrFail($codAs);
