@@ -15,10 +15,10 @@
 
         <div class="row g-3 align-items-center">
             <div class="col-auto">
-                <label for="codAs"  class="col-form-label">Código Assunto</label>
+                <label for="codAs"  class="col-form-label">Código Assunto:</label>
             </div>
             <div class="col-auto">
-                <input type="number" class="form-control" value="{{ $assunto->codAs }}">
+                <input type="number" class="form-control" value="{{ $assunto->codAs }}" disabled>
             </div>
             <div class="col-auto">
                 <label for="descricao"  class="col-form-label">Descricao:</label>

@@ -12,11 +12,11 @@
 
         <div class="row g-3 align-items-center">
             <div class="col-auto">
-                <label for="codAu" class="col-form-label">Codigo Autor</label>
+                <label for="codAu" class="col-form-label">Codigo Autor:</label>
             </div>
 
             <div class="col-auto">
-                <input type="number" value="{{ $autor->codAu }}" class="col-form-label">
+                <input type="number" value="{{ $autor->codAu }}" class="form-control" disabled>
             </div>
 
             <div class="col-auto">
@@ -24,13 +24,12 @@
             </div>
 
             <div class="col-auto">
-                <input type="text" name="nome" id="nome" value="{{ $autor->nome }}" class="col-form-label">
+                <input type="text" name="nome" id="nome" value="{{ $autor->nome }}" class="form-control">
             </div>
 
             <div class="col-auto">
                 <input type="submit" value="Enviar" class="btn btn-secondary">
             </div>
-
         </div>
     </form>
 @endsection

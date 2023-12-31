@@ -2,6 +2,7 @@
 :root {
     --main-color-body: #EFEFEF;
     --main-color-white: #FFFFFF;
+    --main-color-dark-red: #8C2034;
     --main-border-radius: 5px;
 }
 
@@ -11,10 +12,37 @@ body {
     background-color: var(--main-color-body);
 }
 
-div.container {
+nav {
+    background-color: var(--main-color-dark-red);
+}
+
+.text-color__secondary {
+    color: var(--main-color-white);
+}
+
+div.container.main {
     background-color: var(--main-color-white);
     border: 2px solid var(--main-color-white);
     border-radius: var(--main-border-radius);
     padding: 20px 10px;
     margin-top: 30px;
+}
+
+fieldset {
+    margin-bottom: 20px;
+}
+
+.scroll-container {
+    display: block;
+    width: 100%;
+    height: 200px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+.footer {
+    background-color: var(--main-color-dark-red);
+    padding: 50px 0;
+    margin-top: 10%;
+
 }
