@@ -4,6 +4,7 @@ namespace App\Repositories\Interfaces;
 
 use App\Models\Autor;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as CollectionQueryBuilder;
 use App\DTO\Autor\StoreUpdateRepositoryServiceDto;
 
 interface AutorRepositoryInterface
@@ -42,4 +43,10 @@ interface AutorRepositoryInterface
      * @return StoreUpdateRepositoryServiceDto
      */
     public function delete(int $codAu): StoreUpdateRepositoryServiceDto;
+
+    /**
+     *
+     * @return CollectionQueryBuilder
+     */
+    public function listaAutoresPorQuantidadeLivros(): CollectionQueryBuilder;
 }

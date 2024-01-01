@@ -17,13 +17,12 @@ use App\Http\Controllers\LivroController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('livro.index');
 });
 
 Route::resource('autor', AutorController::class);
 Route::resource('assunto', AssuntoController::class);
 Route::resource('livro', LivroController::class);
+Route::get('/autores-por-assunto-livro', [App\Http\Controllers\RelatorioAutoresController::class, 'autoresPorAssuntoQuantidaLivros']);
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
