@@ -3,9 +3,13 @@
 namespace App\Repositories;
 
 use App\DTO\Autor\StoreUpdateRepositoryServiceDto;
+use App\Exceptions\Handler\QueryExceptionHandler;
 use App\Models\Autor;
 use App\Repositories\Interfaces\AutorRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as CollectionQueryBuilder;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class AutorRepository implements AutorRepositoryInterface
 {
@@ -15,39 +19,124 @@ class AutorRepository implements AutorRepositoryInterface
     ) {
     }
 
+    /**
+     *
+     * @return Collection
+     */
     public function listaTodosAutores(): Collection
     {
         return $this->autor->all();
     }
 
-    public function getAutor(int $codAu): Autor
+    /**
+     *
+     * @param integer $codAu
+     * @return Autor|null
+     */
+    public function getAutor(int $codAu): ?Autor
     {
         return $this->autor->find($codAu);
     }
 
+    /**
+     *
+     * @param integer $codAu
+     * @param string $nome
+     * @return StoreUpdateRepositoryServiceDto
+     */
     public function update(int $codAu, string $nome): StoreUpdateRepositoryServiceDto
     {
-        $autor = $this->autor->findOrFail($codAu);
-        $autor->nome = $nome;
+        try {
+            $autor = $this->autor->findOrFail($codAu);
+            $autor->nome = $nome;
 
-        $updateDto = new StoreUpdateRepositoryServiceDto($autor->save(), $autor);
+            $dto = new StoreUpdateRepositoryServiceDto($autor->save(), $autor);
 
-        return $updateDto;
+            return $dto;
+        } catch (QueryException $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        } catch (\Exception $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        }
     }
 
+    /**
+     *
+     * @param string $nome
+     * @return StoreUpdateRepositoryServiceDto
+     */
     public function store(string $nome): StoreUpdateRepositoryServiceDto
     {
+        try {
+            $this->autor->nome = $nome;
 
-        $this->autor->nome = $nome;
+            $dto = new StoreUpdateRepositoryServiceDto($this->autor->save(), $this->autor);
 
-        $storeDto = new StoreUpdateRepositoryServiceDto($this->autor->save(), $this->autor);
+            if (!$dto->status) {
+                throw new \Exception("Erro desconhecido");
+            }
 
-        return $storeDto;
+            return $dto;
+        } catch (QueryException $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        } catch (\Exception $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        }
     }
 
-    public function delete(int $codAu): bool
+    /**
+     *
+     * @param integer $codAu
+     * @return StoreUpdateRepositoryServiceDto
+     */
+    public function delete(int $codAu): StoreUpdateRepositoryServiceDto
     {
-        $autor = $this->autor->findOrFail($codAu);
-        return $autor->delete();
+        try {
+            $autor = $this->autor->findOrFail($codAu);
+            $dto = new StoreUpdateRepositoryServiceDto($autor->delete());
+
+            if (!$dto->status) {
+                throw new \Exception("Erro desconhecido");
+            }
+
+            return $dto;
+        } catch (QueryException $e) {
+            $message = $e->getMessage();
+            if ($e->getCode() === QueryExceptionHandler::INTEGRITY_CONSTRAINT_VIOLATION) {
+                $hanlder = new QueryExceptionHandler($e->getCode(), "Autor", "Livro");
+                $message = $hanlder->getMessage();
+            }
+
+            return new StoreUpdateRepositoryServiceDto(false, null, $message);
+        } catch (\Exception $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        }
+    }
+
+    /**
+     *
+     * @return CollectionQueryBuilder
+     */
+    public function listaAutoresPorQuantidadeLivros(): CollectionQueryBuilder
+    {
+        return DB::table('autor')
+            ->join('livro_autor', 'autor.codAu', '=', 'livro_autor.autor_codAu')
+            ->join('livro', 'livro_autor.livro_codl', '=', 'livro.codl')
+            ->join('livro_assunto', 'livro.codl', '=', 'livro_assunto.livro_codl')
+            ->join('assunto', 'livro_assunto.assunto_codAs', '=', 'assunto.codAs')
+            ->selectRaw('autor.nome as nome, assunto.descricao as descricao, count(livro.codl) as quantidade_livros')
+            ->groupBy('autor.nome', 'assunto.descricao')
+            ->orderBy('autor.nome')
+            ->orderBy('assunto.descricao')
+            ->get();
+    }
+
+    /**
+     *
+     * @return CollectionQueryBuilder
+     */
+    public function viewAutoresPorQuantidadeLivros(): CollectionQueryBuilder
+    {
+        return DB::table('vw_AutorPorAssuntoQtdLivro')->get();
     }
 }

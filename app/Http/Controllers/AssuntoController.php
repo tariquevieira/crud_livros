@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Assunto\ServiceControllerDto;
+use App\Http\Requests\StoreUpdateAssuntoRequest;
 use App\Services\AssuntoService;
 use Illuminate\Http\Request;
 
@@ -36,32 +38,33 @@ class AssuntoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUpdateAssuntoRequest $request)
     {
         $dados = $request->all();
-        $createDto = $this->assuntoService->store($dados['descricao']);
+        $result = $this->assuntoService->store($dados['descricao']);
 
-        return view('assunto.edit', [
-            'assunto' => $createDto->assunto,
-            'updated' => $createDto->status,
-            'mensagem' => $createDto->mensagem
-        ]);
+        return $this->lidaRedirect($result);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $codAu)
     {
-        //
+        return redirect()->route('assunto.edit', $codAu);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $assunto)
+    public function edit(string $codAu)
     {
-        $assunto = $this->assuntoService->getassunto((int)$assunto);
+        $assunto = $this->assuntoService->getassunto((int)$codAu);
+
+        if (empty($assunto)) {
+            return redirect()->route('assunto.index')->withErrors(['error' => "Assunto não encontrado"]);
+        }
+
         return view('assunto.edit', [
             'assunto' => $assunto
         ]);
@@ -70,16 +73,11 @@ class AssuntoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $assunto)
+    public function update(StoreUpdateAssuntoRequest $request, string $assunto)
     {
         $dados = $request->all();
-        $updateDto = $this->assuntoService->update((int)$assunto, $dados['descricao']);
-
-        return view('assunto.edit', [
-            'assunto' => $updateDto->assunto,
-            'updated' => $updateDto->status,
-            'message' => $updateDto->mensagem
-        ]);
+        $result = $this->assuntoService->update((int)$assunto, $dados['descricao']);
+        return $this->lidaRedirect($result);
     }
 
     /**
@@ -87,10 +85,16 @@ class AssuntoController extends Controller
      */
     public function destroy(string $assunto)
     {
-        $deleted = $this->assuntoService->delete((int)$assunto);
+        $result = $this->assuntoService->delete((int)$assunto);
+        return $this->lidaRedirect($result);
+    }
 
-        if ($deleted) {
-            return $this->index();
+    private function lidaRedirect(ServiceControllerDto $result)
+    {
+        if ($result->status) {
+            return redirect()->route('assunto.index')->with('success', $result->mensagem);
         }
+
+        return redirect()->back()->withErrors(['error' => $result->mensagem]);
     }
 }

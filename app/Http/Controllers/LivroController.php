@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Livro\StoreControllerServiceDto;
+use App\DTO\Livro\StoreUpdateFindDto;
+use App\Http\Requests\StoreUpdateLivroRequest;
 use App\Services\LivroService;
 use Illuminate\Http\Request;
 
@@ -44,7 +46,7 @@ class LivroController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUpdateLivroRequest $request)
     {
         $dto = new StoreControllerServiceDto(
             $request->titulo,
@@ -57,11 +59,7 @@ class LivroController extends Controller
 
         $result = $this->livroService->store($dto);
 
-        if ($result->status) {
-            return redirect()->route('livro.index');
-        }
-
-        return redirect()->back()->withErrors(['erro_store' => $result->mensagem]);
+        return $this->lidaRedirect($result);
     }
 
     /**
@@ -109,7 +107,7 @@ class LivroController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $codl)
+    public function update(StoreUpdateLivroRequest $request, int $codl)
     {
         $dto = new StoreControllerServiceDto(
             $request->titulo,
@@ -121,11 +119,7 @@ class LivroController extends Controller
             (int) $codl
         );
         $result = $this->livroService->update($dto);
-        if ($result->status) {
-            return redirect()->route('livro.index');
-        }
-
-        return redirect()->back()->withErrors(['erro_store' => $result->mensagem]);
+        return $this->lidaRedirect($result);
     }
 
     /**
@@ -134,8 +128,16 @@ class LivroController extends Controller
     public function destroy(int $codl)
     {
         $result = $this->livroService->delete($codl);
+        return $this->lidaRedirect($result);
+    }
+
+    private function lidaRedirect(StoreUpdateFindDto $result)
+    {
+
         if ($result->status) {
-            return redirect()->route('livro.index');
+            return redirect()->route('livro.index')->with('success', $result->mensagem);
         }
+
+        return redirect()->back()->withErrors(['error' => $result->mensagem]);
     }
 }

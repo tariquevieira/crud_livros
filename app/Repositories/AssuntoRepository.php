@@ -3,9 +3,11 @@
 namespace App\Repositories;
 
 use App\DTO\Assunto\StoreUpdateRepositoryServiceDto;
+use App\Exceptions\Handler\QueryExceptionHandler;
 use App\Models\Assunto;
 use App\Repositories\Interfaces\AssuntoRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\QueryException;
 
 class AssuntoRepository implements AssuntoRepositoryInterface
 {
@@ -15,39 +17,102 @@ class AssuntoRepository implements AssuntoRepositoryInterface
     ) {
     }
 
+    /**
+     *
+     * @return Collection
+     */
     public function listaTodosassuntos(): Collection
     {
         return $this->assunto->all();
     }
 
-    public function getassunto(int $codAs)
+    /**
+     *
+     * @param integer $codAs
+     * @return Assunto
+     */
+    public function getassunto(int $codAs): Assunto
     {
         return $this->assunto->find($codAs);
     }
 
-    public function update(int $codAs, string $descricao)
+    /**
+     *
+     * @param integer $codAs
+     * @param string $descricao
+     * @return StoreUpdateRepositoryServiceDto
+     */
+    public function update(int $codAs, string $descricao): StoreUpdateRepositoryServiceDto
     {
-        $assunto = $this->assunto->findOrFail($codAs);
-        $assunto->descricao = $descricao;
+        try {
+            $assunto = $this->assunto->findOrFail($codAs);
+            $assunto->descricao = $descricao;
 
-        $updateDto = new StoreUpdateRepositoryServiceDto($assunto->save(), $assunto);
+            $dto = new StoreUpdateRepositoryServiceDto($assunto->save(), $assunto);
 
-        return $updateDto;
+            if (!$dto->status) {
+                throw new \Exception("Erro desconhecido");
+            }
+
+            return $dto;
+        } catch (QueryException $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        } catch (\Exception $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        }
     }
 
-    public function store(string $descricao)
+    /**
+     *
+     * @param string $descricao
+     * @return StoreUpdateRepositoryServiceDto
+     */
+    public function store(string $descricao): StoreUpdateRepositoryServiceDto
     {
+        try {
+            $this->assunto->descricao = $descricao;
 
-        $this->assunto->descricao = $descricao;
+            $dto = new StoreUpdateRepositoryServiceDto($this->assunto->save(), $this->assunto);
 
-        $storeDto = new StoreUpdateRepositoryServiceDto($this->assunto->save(), $this->assunto);
+            if (!$dto->status) {
+                throw new \Exception("Erro desconhecido");
+            }
 
-        return $storeDto;
+            return $dto;
+        } catch (QueryException $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        } catch (\Exception $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        }
     }
 
-    public function delete(int $codAs)
+    /**
+     *
+     * @param integer $codAs
+     * @return StoreUpdateRepositoryServiceDto
+     */
+    public function delete(int $codAs): StoreUpdateRepositoryServiceDto
     {
-        $assunto = $this->assunto->findOrFail($codAs);
-        return $assunto->delete();
+        try {
+            $assunto = $this->assunto->findOrFail($codAs);
+            $dto = new StoreUpdateRepositoryServiceDto($assunto->delete());
+
+            if (!$dto->status) {
+                throw new \Exception("Erro desconhecido");
+            }
+
+            return $dto;
+        } catch (QueryException $e) {
+            $message = $e->getMessage();
+
+            if ($e->getCode() === QueryExceptionHandler::INTEGRITY_CONSTRAINT_VIOLATION) {
+                $hanlder = new QueryExceptionHandler($e->getCode(), "Assunto", "Livro");
+                $message = $hanlder->getMessage();
+            }
+
+            return new StoreUpdateRepositoryServiceDto(false, null, $message);
+        } catch (\Exception $e) {
+            return new StoreUpdateRepositoryServiceDto(false, null, $e->getMessage());
+        }
     }
 }

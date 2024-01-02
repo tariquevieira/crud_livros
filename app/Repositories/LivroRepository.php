@@ -6,6 +6,7 @@ use App\DTO\Livro\StoreUpdateFindDto;
 use App\DTO\Livro\StoreControllerServiceDto;
 use App\Models\Livro;
 use App\Repositories\Interfaces\LivroRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class LivroRepository implements LivroRepositoryInterface
@@ -15,12 +16,21 @@ class LivroRepository implements LivroRepositoryInterface
     ) {
     }
 
-    public function listaTodosLivros()
+    /**
+     *
+     * @return Collection
+     */
+    public function listaTodosLivros(): Collection
     {
         return $this->livro->all(['codl', 'titulo']);
     }
 
-    public function store(StoreControllerServiceDto $dto)
+    /**
+     *
+     * @param StoreControllerServiceDto $dto
+     * @return StoreUpdateFindDto
+     */
+    public function store(StoreControllerServiceDto $dto): StoreUpdateFindDto
     {
         try {
             DB::beginTransaction();
@@ -48,13 +58,25 @@ class LivroRepository implements LivroRepositoryInterface
         }
     }
 
-    public function find(int $codl)
+    /**
+     *
+     * @param integer $codl
+     * @return Livro
+     */
+    public function find(int $codl): ?Livro
     {
         return $this->livro->with(['autores', 'assuntos'])
             ->where('codl', $codl)
             ->first();
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Livro $livro
+     * @param StoreControllerServiceDto $dto
+     * @return StoreUpdateFindDto
+     */
     public function update(Livro $livro, StoreControllerServiceDto $dto): StoreUpdateFindDto
     {
         try {
@@ -83,6 +105,11 @@ class LivroRepository implements LivroRepositoryInterface
         }
     }
 
+    /**
+     *
+     * @param Livro $livro
+     * @return StoreUpdateFindDto
+     */
     public function delete(Livro $livro): StoreUpdateFindDto
     {
         try {

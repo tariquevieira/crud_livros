@@ -4,15 +4,15 @@ namespace App\DTO\Autor;
 
 use App\Models\Autor;
 
-class StoreUpdateServiceControllerDto
+class ServiceControllerDto
 {
     public readonly bool $status;
     public readonly ?Autor $autor;
-    public readonly string $mensagem;
+    public readonly ?string $mensagem;
 
     public function __construct(
         bool $status = false,
-        string $mensagem = '',
+        string $mensagem = null,
         ?Autor $autor = null
     ) {
         $this->status = $status;

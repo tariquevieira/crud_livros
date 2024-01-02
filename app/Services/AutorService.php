@@ -2,68 +2,126 @@
 
 namespace App\Services;
 
-use App\DTO\Autor\StoreUpdateServiceControllerDto;
-use App\Repositories\AutorRepository;
+use App\DTO\Autor\ServiceControllerDto;
+use App\Models\Autor;
+use App\Repositories\Interfaces\AutorRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class AutorService
 {
     public function __construct(
-        private AutorRepository $autorRepository
+        private AutorRepositoryInterface $autorRepository
     ) {
     }
 
-    public function listaTodosAutores()
+    /**
+     * Lida com retorno de todos autores
+     *
+     * @return Collection
+     */
+    public function listaTodosAutores(): Collection
     {
         $autores = $this->autorRepository->listaTodosAutores();
         return $autores;
     }
 
-    public function getAutor(int $codAu)
+    /**
+     * Lida com retorno de um autor
+     *
+     * @param integer $codAu
+     * @return Autor
+     */
+    public function getAutor(int $codAu): ServiceControllerDto
     {
         $autor = $this->autorRepository->getAutor($codAu);
-        return $autor;
-    }
-
-    public function update(int $codAu, string $nome)
-    {
-        $updateDto = $this->autorRepository->update($codAu, $nome);
-
-        if ($updateDto->status) {
-            return new StoreUpdateServiceControllerDto(
-                $updateDto->status,
-                "Autor atualizado com sucesso!!!",
-                $updateDto->autor
+        if (empty($autor)) {
+            return new ServiceControllerDto(
+                false,
+                "Autor nao encontrado",
+                null
             );
         }
 
-        return new StoreUpdateServiceControllerDto(
-            $updateDto->status,
-            "Erro ao atualizar autor!",
+        return new ServiceControllerDto(
+            true,
+            null,
+            $autor
+        );;
+    }
+
+    /**
+     * Lida com a atualização autor
+     *
+     * @param integer $codAu
+     * @param string $nome
+     * @return ServiceControllerDto
+     */
+    public function update(int $codAu, string $nome): ServiceControllerDto
+    {
+        $dto = $this->autorRepository->update($codAu, $nome);
+
+        if ($dto->status) {
+            return new ServiceControllerDto(
+                $dto->status,
+                "Autor atualizado com sucesso!!!",
+                $dto->autor
+            );
+        }
+
+        return new ServiceControllerDto(
+            $dto->status,
+            $dto->mensagem,
             $this->getAutor($codAu)
         );
     }
 
-    public function store(string $nome)
+    /**
+     * Lida com a inserção autor
+     *
+     * @param string $nome
+     * @return ServiceControllerDto
+     */
+    public function store(string $nome): ServiceControllerDto
     {
-        $storeDto = $this->autorRepository->store($nome);
+        $dto = $this->autorRepository->store($nome);
 
-        if ($storeDto->status) {
-            return new StoreUpdateServiceControllerDto(
-                $storeDto->status,
+        if ($dto->status) {
+            return new ServiceControllerDto(
+                $dto->status,
                 "Autor criado com sucesso!!!",
-                $storeDto->autor
+                $dto->autor
             );
         }
 
-        return new StoreUpdateServiceControllerDto(
-            $storeDto->status,
-            "Erro ao atualizar autor!",
-            $storeDto->autor
+        return new ServiceControllerDto(
+            $dto->status,
+            $dto->mensagem,
+            $dto->autor
         );
     }
 
-    public function delete(int $codAu)
+    /**
+     *  Lida com deleção de Autor
+     *
+     * @param integer $codAu
+     * @return ServiceControllerDto
+     */
+    public function delete(int $codAu): ServiceControllerDto
     {
-        return $this->autorRepository->delete($codAu);
+        $dto = $this->autorRepository->delete($codAu);
+
+        if ($dto->status) {
+            return new ServiceControllerDto(
+                $dto->status,
+                "Autor criado com sucesso!!!",
+                $dto->autor
+            );
+        }
+
+        return new ServiceControllerDto(
+            $dto->status,
+            $dto->mensagem,
+            null
+        );
     }
 }

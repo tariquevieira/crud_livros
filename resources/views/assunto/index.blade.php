@@ -1,36 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-
-<body>
-    <div class="center">
-        <div class="w100">
-            <h1>Lista de assuntoes</h1>
-            <a href="{{route('assunto.create')}}">Novo</a>
-            <ul>
-                @forelse ($assuntos as $assunto)
-                    <li>
-                        {{ $assunto->descricao }}
-                        <a href="{{ route('assunto.edit', $assunto->codAs)}}">Editar</a>
-                        <form action="{{route('assunto.destroy', $assunto->codAs)}}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <input type="submit" value="Excluir">
-                        </form>
-                    </li>
-                @empty
-                    <p>Não existe assuntoes</p>
-                @endforelse
-            </ul>
-        </div>
+@extends('layouts.main')
+@section('title', 'Lista de Assuntos')
+@section('content')
+    <div class="d-flex flex-row p-2 justify-content-between">
+        <h1>Lista de Assuntos</h1>
+        <a href="{{ route('assunto.create') }}" class="btn btn-success mt-2 mb-2" hole="button">Novo</a>
     </div>
+    <ul class="list-group">
+        @forelse ($assuntos as $assunto)
+            <li class="list-group-item d-flex flex-row justify-content-between">
+                <span class="m-2">{{ $assunto->descricao }}</span>
 
-</body>
+                <div class="d-flex flex-row">
+                    <a href="{{ route('assunto.edit', $assunto->codAs) }}" class="btn btn-secondary me-2"
+                        hole="button">Editar</a>
+                    <form action="{{ route('assunto.destroy', $assunto->codAs) }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" value="Excluir" class="btn btn-danger" onclick="return confirm('Deseja Apagar esse assunto?')">
+                    </form>
+                </div>
 
-</html>
+            </li>
+        @empty
+            <p>Não existe assuntoes</p>
+        @endforelse
+    </ul>
+@endsection

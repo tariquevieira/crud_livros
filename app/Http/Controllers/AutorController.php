@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\DTO\Autor\ServiceControllerDto;
+use App\Http\Requests\StoreUpdateAutorRequest;
 use App\Services\AutorService;
-use Illuminate\View\View;
 
 class AutorController extends Controller
 {
@@ -36,24 +36,19 @@ class AutorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUpdateAutorRequest $request)
     {
         $dados = $request->all();
-        $createDto = $this->autorService->store($dados['nome']);
-
-        return view('autor.edit', [
-            'autor' => $createDto->autor,
-            'updated' => $createDto->status,
-            'mensagem' => $createDto->mensagem
-        ]);
+        $result = $this->autorService->store($dados['nome']);
+        return $this->lidaRedirect($result);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $codl)
     {
-        //
+        return redirect()->route('autor.edit', $codl);
     }
 
     /**
@@ -61,25 +56,24 @@ class AutorController extends Controller
      */
     public function edit(string $autor)
     {
-        $autor = $this->autorService->getAutor((int)$autor);
-        return view('autor.edit', [
-            'autor' => $autor
-        ]);
+        $result = $this->autorService->getAutor((int)$autor);
+        if ($result->status) {
+            return view('autor.edit', [
+                'autor' => $autor
+            ]);
+        }
+
+        return redirect()->route('autor.index')->withErrors(['error' => $result->mensagem]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $autor)
+    public function update(StoreUpdateAutorRequest $request, string $autor)
     {
         $dados = $request->all();
-        $updateDto = $this->autorService->update((int)$autor, $dados['nome']);
-
-        return view('autor.edit', [
-            'autor' => $updateDto->autor,
-            'updated' => $updateDto->status,
-            'message' => $updateDto->mensagem
-        ]);
+        $result = $this->autorService->update((int)$autor, $dados['nome']);
+        return $this->lidaRedirect($result);
     }
 
     /**
@@ -87,10 +81,18 @@ class AutorController extends Controller
      */
     public function destroy(string $autor)
     {
-        $deleted = $this->autorService->delete((int)$autor);
+        $result = $this->autorService->delete((int)$autor);
 
-        if ($deleted) {
-            return $this->index();
+        return $this->lidaRedirect($result);
+    }
+
+    private function lidaRedirect(ServiceControllerDto $result)
+    {
+
+        if ($result->status) {
+            return redirect()->route('autor.index')->with('success', $result->mensagem);
         }
+
+        return redirect()->back()->withErrors(['error' => $result->mensagem]);
     }
 }

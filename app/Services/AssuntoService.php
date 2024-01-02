@@ -2,68 +2,115 @@
 
 namespace App\Services;
 
-use App\DTO\Assunto\StoreUpdateServiceControllerDto;
+use App\DTO\Assunto\ServiceControllerDto;
+use App\Models\Assunto;
 use App\Repositories\AssuntoRepository;
+use App\Repositories\Interfaces\AssuntoRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class AssuntoService
 {
     public function __construct(
-        private AssuntoRepository $assuntoRepository
+        private AssuntoRepositoryInterface $assuntoRepository
     ) {
     }
 
-    public function listaTodosassuntos()
+    /**
+     * Lida com retorno de todos os assuntos
+     *
+     * @return Collection
+     */
+    public function listaTodosassuntos(): Collection
     {
         $assuntoes = $this->assuntoRepository->listaTodosassuntos();
         return $assuntoes;
     }
 
-    public function getassunto(int $codAu)
+    /**
+     * Lida com o retorno de um assunto
+     *
+     * @param integer $codAu
+     * @return Assunto
+     */
+    public function getassunto(int $codAu): Assunto
     {
         $assunto = $this->assuntoRepository->getassunto($codAu);
+        if (empty($assunto)) {
+            return new ServiceControllerDto(
+                false,
+                "assunto não encontrado"
+            );
+        }
         return $assunto;
     }
 
-    public function update(int $codAu, string $nome)
+    /**
+     * Lida com a atualização Assunto
+     *
+     * @param integer $codAu
+     * @param string $nome
+     * @return ServiceControllerDto
+     */
+    public function update(int $codAu, string $nome): ServiceControllerDto
     {
-        $updateDto = $this->assuntoRepository->update($codAu, $nome);
+        $dto = $this->assuntoRepository->update($codAu, $nome);
 
-        if ($updateDto->status) {
-            return new StoreUpdateServiceControllerDto(
-                $updateDto->status,
+        if ($dto->status) {
+            return new ServiceControllerDto(
+                $dto->status,
                 "assunto atualizado com sucesso!!!",
-                $updateDto->assunto
+                $dto->assunto
             );
         }
 
-        return new StoreUpdateServiceControllerDto(
-            $updateDto->status,
-            "Erro ao atualizar assunto!",
-            $this->getassunto($codAu)
+        return new ServiceControllerDto(
+            $dto->status,
+            $dto->mensagem
         );
     }
 
-    public function store(string $nome)
+    /**
+     * Lida com a inserção Assunto
+     *
+     * @param string $nome
+     * @return ServiceControllerDto
+     */
+    public function store(string $nome): ServiceControllerDto
     {
-        $storeDto = $this->assuntoRepository->store($nome);
+        $dto = $this->assuntoRepository->store($nome);
 
-        if ($storeDto->status) {
-            return new StoreUpdateServiceControllerDto(
-                $storeDto->status,
+        if ($dto->status) {
+            return new ServiceControllerDto(
+                $dto->status,
                 "assunto criado com sucesso!!!",
-                $storeDto->assunto
+                $dto->assunto
             );
         }
 
-        return new StoreUpdateServiceControllerDto(
-            $storeDto->status,
-            "Erro ao atualizar assunto!",
-            $storeDto->assunto
+        return new ServiceControllerDto(
+            $dto->status,
+            $dto->mensagem,
+            $dto->assunto
         );
     }
 
+    /**
+     * Lida com deleção de assunto
+     *
+     * @param integer $codAu
+     * @return void
+     */
     public function delete(int $codAu)
     {
-        return $this->assuntoRepository->delete($codAu);
+        $dto = $this->assuntoRepository->delete($codAu);
+
+        if ($dto->status) {
+            return new ServiceControllerDto(true, "Assunto deletado");
+        }
+
+        return new ServiceControllerDto(
+            false,
+            $dto->mensagem
+        );
     }
 }
