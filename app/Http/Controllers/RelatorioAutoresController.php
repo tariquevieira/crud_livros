@@ -17,7 +17,7 @@ class RelatorioAutoresController extends Controller
      */
     public function autoresPorAssuntoQuantidaLivros()
     {
-        $result = $this->autorRepository->listaAutoresPorQuantidadeLivros();
+        $result = $this->autorRepository->viewAutoresPorQuantidadeLivros();
         $data = [];
         $data['result'] = $result->toArray();
         $pdf = Pdf::loadView('autor.relatorios.autor-por-assunto-livros', $data);

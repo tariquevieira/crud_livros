@@ -49,5 +49,5 @@ interface AutorRepositoryInterface
      *
      * @return CollectionQueryBuilder
      */
-    public function listaAutoresPorQuantidadeLivros(): CollectionQueryBuilder;
+    public function viewAutoresPorQuantidadeLivros(): CollectionQueryBuilder;
 }

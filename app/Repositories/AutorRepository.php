@@ -114,7 +114,6 @@ class AutorRepository implements AutorRepositoryInterface
     }
 
     /**
-     * Undocumented function
      *
      * @return CollectionQueryBuilder
      */
@@ -130,5 +129,14 @@ class AutorRepository implements AutorRepositoryInterface
             ->orderBy('autor.nome')
             ->orderBy('assunto.descricao')
             ->get();
+    }
+
+    /**
+     *
+     * @return CollectionQueryBuilder
+     */
+    public function viewAutoresPorQuantidadeLivros(): CollectionQueryBuilder
+    {
+        return DB::table('vw_AutorPorAssuntoQtdLivro')->get();
     }
 }

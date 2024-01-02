@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('assunto', function (Blueprint $table) {
             $table->bigIncrements('codAs');
-            $table->char('descricao', 200);
+            $table->char('descricao', 20);
             $table->timestamps();
         });
     }
