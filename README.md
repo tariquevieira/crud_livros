@@ -7,7 +7,6 @@ Foi criado usando:
 
 ## Executar via sail:
 - Será necessário renomear o arquivo .env copy para .env
-- 
 - Será executado na porta 8009
 - `./vendor/bin/sail up -d` para subir containers
 - `./vendor/bin/sail npm run dev` para subir vite com bootstrap CSS.
