@@ -3,6 +3,7 @@
     --main-color-body: #EFEFEF;
     --main-color-white: #FFFFFF;
     --main-color-dark-red: #8C2034;
+    --main-color-light-red: #FFE5E5;
     --main-border-radius: 5px;
 }
 
@@ -19,7 +20,9 @@ nav {
 .text-color__secondary {
     color: var(--main-color-white);
 }
-
+.dropdown-menu-externo {
+    background-color: var(--main-color-light-red);
+}
 div.container.main {
     background-color: var(--main-color-white);
     border: 2px solid var(--main-color-white);

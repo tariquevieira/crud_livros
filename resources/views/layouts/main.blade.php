@@ -31,6 +31,15 @@
                     <li class="nav-item">
                         <a class="nav-link text-color__secondary" href="{{ route('assunto.index') }}">Assunto</a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-color__secondary" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Relatórios
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-externo" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{route('autor.relassuntolivros')}}">Autor por assunto e quantidade de livros</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -65,7 +74,8 @@
                     class="nav-link px-2  text-color__secondary">Tribunal de Justiça do Estado do Rio de Janeiro</a>
             </li>
             <li class="nav-item"><a href="https://www.spassu.com.br/"
-                    class="nav-link px-2 text-color__secondary">Spassu</a></li>
+                    class="nav-link px-2 text-color__secondary">Spassu</a>
+            </li>
         </ul>
         <p class="text-center text-color__secondary">© 2024 Tarique Vieira Ramos</p>
     </footer>

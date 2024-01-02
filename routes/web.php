@@ -23,6 +23,6 @@ Route::get('/', function () {
 Route::resource('autor', AutorController::class);
 Route::resource('assunto', AssuntoController::class);
 Route::resource('livro', LivroController::class);
-Route::get('/autores-por-assunto-livro', [App\Http\Controllers\RelatorioAutoresController::class, 'autoresPorAssuntoQuantidaLivros']);
+Route::get('/autores-por-assunto-livro', [App\Http\Controllers\RelatorioAutoresController::class, 'autoresPorAssuntoQuantidaLivros'])->name('autor.relassuntolivros');
 
 Auth::routes();
