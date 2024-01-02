@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\Autor\StoreUpdateServiceControllerDto;
+use App\DTO\Autor\ServiceControllerDto;
 use App\Http\Requests\StoreUpdateAutorRequest;
 use App\Services\AutorService;
 
@@ -46,9 +46,9 @@ class AutorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $codl)
     {
-        //
+        return redirect()->route('autor.edit', $codl);
     }
 
     /**
@@ -56,10 +56,14 @@ class AutorController extends Controller
      */
     public function edit(string $autor)
     {
-        $autor = $this->autorService->getAutor((int)$autor);
-        return view('autor.edit', [
-            'autor' => $autor
-        ]);
+        $result = $this->autorService->getAutor((int)$autor);
+        if ($result->status) {
+            return view('autor.edit', [
+                'autor' => $autor
+            ]);
+        }
+
+        return redirect()->route('autor.index')->withErrors(['error' => $result->mensagem]);
     }
 
     /**
@@ -82,7 +86,7 @@ class AutorController extends Controller
         return $this->lidaRedirect($result);
     }
 
-    private function lidaRedirect(StoreUpdateServiceControllerDto $result)
+    private function lidaRedirect(ServiceControllerDto $result)
     {
 
         if ($result->status) {

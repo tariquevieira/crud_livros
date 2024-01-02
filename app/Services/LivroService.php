@@ -156,7 +156,15 @@ class LivroService
             );
         }
 
-        return $this->livroRepository->update($result->livro, $dto);
+        $result = $this->livroRepository->update($result->livro, $dto);
+
+        if ($result->status) {
+            return new StoreUpdateFindDto(
+                status: true,
+                mensagem: "Livro atualizado!",
+                livro: null,
+            );
+        }
     }
 
     /**
@@ -177,10 +185,20 @@ class LivroService
             );
         }
 
+        $result = $this->livroRepository->delete($result->livro);
+
+        if ($result->status) {
+            return new StoreUpdateFindDto(
+                status: true,
+                mensagem: "Livro deletado com sucesso!",
+                livro: null,
+            );
+        }
+
         return new StoreUpdateFindDto(
-            status: true,
-            mensagem: "Livro deletado com sucesso!",
+            status: false,
+            mensagem: $result->mensagem,
             livro: null,
-        );;
+        );
     }
 }

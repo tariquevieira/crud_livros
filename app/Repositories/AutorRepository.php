@@ -31,9 +31,9 @@ class AutorRepository implements AutorRepositoryInterface
     /**
      *
      * @param integer $codAu
-     * @return Autor
+     * @return Autor|null
      */
-    public function getAutor(int $codAu): Autor
+    public function getAutor(int $codAu): ?Autor
     {
         return $this->autor->find($codAu);
     }

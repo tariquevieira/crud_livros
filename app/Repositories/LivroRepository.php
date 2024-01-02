@@ -63,7 +63,7 @@ class LivroRepository implements LivroRepositoryInterface
      * @param integer $codl
      * @return Livro
      */
-    public function find(int $codl): Livro
+    public function find(int $codl): ?Livro
     {
         return $this->livro->with(['autores', 'assuntos'])
             ->where('codl', $codl)

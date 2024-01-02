@@ -22,12 +22,12 @@ interface LivroRepositoryInterface
      */
     public function store(StoreControllerServiceDto $dto): StoreUpdateFindDto;
 
-    /**
-     *
-     * @param integer $codl
-     * @return Livro
-     */
-    public function find(int $codl): Livro;
+   /**
+    *
+    * @param integer $codl
+    * @return Livro|null
+    */
+    public function find(int $codl): ?Livro;
 
     /**
      *

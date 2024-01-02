@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\DTO\Autor\StoreUpdateServiceControllerDto;
+use App\DTO\Autor\ServiceControllerDto;
 use App\Models\Autor;
 use App\Repositories\Interfaces\AutorRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,10 +31,22 @@ class AutorService
      * @param integer $codAu
      * @return Autor
      */
-    public function getAutor(int $codAu): Autor
+    public function getAutor(int $codAu): ServiceControllerDto
     {
         $autor = $this->autorRepository->getAutor($codAu);
-        return $autor;
+        if (empty($autor)) {
+            return new ServiceControllerDto(
+                false,
+                "Autor nao encontrado",
+                null
+            );
+        }
+
+        return new ServiceControllerDto(
+            true,
+            null,
+            $autor
+        );;
     }
 
     /**
@@ -42,21 +54,21 @@ class AutorService
      *
      * @param integer $codAu
      * @param string $nome
-     * @return StoreUpdateServiceControllerDto
+     * @return ServiceControllerDto
      */
-    public function update(int $codAu, string $nome): StoreUpdateServiceControllerDto
+    public function update(int $codAu, string $nome): ServiceControllerDto
     {
         $dto = $this->autorRepository->update($codAu, $nome);
 
         if ($dto->status) {
-            return new StoreUpdateServiceControllerDto(
+            return new ServiceControllerDto(
                 $dto->status,
                 "Autor atualizado com sucesso!!!",
                 $dto->autor
             );
         }
 
-        return new StoreUpdateServiceControllerDto(
+        return new ServiceControllerDto(
             $dto->status,
             $dto->mensagem,
             $this->getAutor($codAu)
@@ -67,21 +79,21 @@ class AutorService
      * Lida com a inserção autor
      *
      * @param string $nome
-     * @return StoreUpdateServiceControllerDto
+     * @return ServiceControllerDto
      */
-    public function store(string $nome): StoreUpdateServiceControllerDto
+    public function store(string $nome): ServiceControllerDto
     {
         $dto = $this->autorRepository->store($nome);
 
         if ($dto->status) {
-            return new StoreUpdateServiceControllerDto(
+            return new ServiceControllerDto(
                 $dto->status,
                 "Autor criado com sucesso!!!",
                 $dto->autor
             );
         }
 
-        return new StoreUpdateServiceControllerDto(
+        return new ServiceControllerDto(
             $dto->status,
             $dto->mensagem,
             $dto->autor
@@ -92,21 +104,21 @@ class AutorService
      *  Lida com deleção de Autor
      *
      * @param integer $codAu
-     * @return StoreUpdateServiceControllerDto
+     * @return ServiceControllerDto
      */
-    public function delete(int $codAu): StoreUpdateServiceControllerDto
+    public function delete(int $codAu): ServiceControllerDto
     {
         $dto = $this->autorRepository->delete($codAu);
 
         if ($dto->status) {
-            return new StoreUpdateServiceControllerDto(
+            return new ServiceControllerDto(
                 $dto->status,
                 "Autor criado com sucesso!!!",
                 $dto->autor
             );
         }
 
-        return new StoreUpdateServiceControllerDto(
+        return new ServiceControllerDto(
             $dto->status,
             $dto->mensagem,
             null

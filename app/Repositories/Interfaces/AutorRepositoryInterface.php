@@ -15,12 +15,13 @@ interface AutorRepositoryInterface
      */
     public function listaTodosAutores(): Collection;
 
-    /**
-     *
-     * @param integer $codAu
-     * @return Autor
-     */
-    public function getAutor(int $codAu): Autor;
+   /**
+
+    *
+    * @param integer $codAu
+    * @return Autor|null
+    */
+    public function getAutor(int $codAu): ?Autor;
 
     /**
      *

@@ -4,7 +4,7 @@ namespace App\DTO\Assunto;
 
 use App\Models\Assunto;
 
-class StoreUpdateServiceControllerDto
+class ServiceControllerDto
 {
     public readonly bool $status;
     public readonly ?assunto $assunto;

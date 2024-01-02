@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\DTO\Assunto\StoreUpdateServiceControllerDto;
+use App\DTO\Assunto\ServiceControllerDto;
 use App\Models\Assunto;
 use App\Repositories\AssuntoRepository;
 use App\Repositories\Interfaces\AssuntoRepositoryInterface;
@@ -35,6 +35,12 @@ class AssuntoService
     public function getassunto(int $codAu): Assunto
     {
         $assunto = $this->assuntoRepository->getassunto($codAu);
+        if (empty($assunto)) {
+            return new ServiceControllerDto(
+                false,
+                "assunto não encontrado"
+            );
+        }
         return $assunto;
     }
 
@@ -43,24 +49,23 @@ class AssuntoService
      *
      * @param integer $codAu
      * @param string $nome
-     * @return StoreUpdateServiceControllerDto
+     * @return ServiceControllerDto
      */
-    public function update(int $codAu, string $nome): StoreUpdateServiceControllerDto
+    public function update(int $codAu, string $nome): ServiceControllerDto
     {
         $dto = $this->assuntoRepository->update($codAu, $nome);
 
         if ($dto->status) {
-            return new StoreUpdateServiceControllerDto(
+            return new ServiceControllerDto(
                 $dto->status,
                 "assunto atualizado com sucesso!!!",
                 $dto->assunto
             );
         }
 
-        return new StoreUpdateServiceControllerDto(
+        return new ServiceControllerDto(
             $dto->status,
-            $dto->mensagem,
-            $this->getassunto($codAu)
+            $dto->mensagem
         );
     }
 
@@ -68,21 +73,21 @@ class AssuntoService
      * Lida com a inserção Assunto
      *
      * @param string $nome
-     * @return StoreUpdateServiceControllerDto
+     * @return ServiceControllerDto
      */
-    public function store(string $nome): StoreUpdateServiceControllerDto
+    public function store(string $nome): ServiceControllerDto
     {
         $dto = $this->assuntoRepository->store($nome);
 
         if ($dto->status) {
-            return new StoreUpdateServiceControllerDto(
+            return new ServiceControllerDto(
                 $dto->status,
                 "assunto criado com sucesso!!!",
                 $dto->assunto
             );
         }
 
-        return new StoreUpdateServiceControllerDto(
+        return new ServiceControllerDto(
             $dto->status,
             $dto->mensagem,
             $dto->assunto
@@ -100,10 +105,10 @@ class AssuntoService
         $dto = $this->assuntoRepository->delete($codAu);
 
         if ($dto->status) {
-            return new StoreUpdateServiceControllerDto(true, "Assunto deletado");
+            return new ServiceControllerDto(true, "Assunto deletado");
         }
 
-        return new StoreUpdateServiceControllerDto(
+        return new ServiceControllerDto(
             false,
             $dto->mensagem
         );

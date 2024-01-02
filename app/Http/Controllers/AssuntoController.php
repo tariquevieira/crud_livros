@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\Assunto\StoreUpdateServiceControllerDto;
+use App\DTO\Assunto\ServiceControllerDto;
 use App\Http\Requests\StoreUpdateAssuntoRequest;
 use App\Services\AssuntoService;
 use Illuminate\Http\Request;
@@ -89,7 +89,7 @@ class AssuntoController extends Controller
         return $this->lidaRedirect($result);
     }
 
-    private function lidaRedirect(StoreUpdateServiceControllerDto $result)
+    private function lidaRedirect(ServiceControllerDto $result)
     {
         if ($result->status) {
             return redirect()->route('assunto.index')->with('success', $result->mensagem);
